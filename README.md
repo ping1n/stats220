@@ -27,3 +27,4 @@ I actually write *all* my notes **in markdown**. shoutout [joplin](https://jopli
 4. ordered
 5. list
 
+![](https://media1.tenor.com/m/B-Afo8x5aXEAAAAC/dog-accepting-fate.gif)
