@@ -1,0 +1,94 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+body {
+  text-align:center;
+}
+```
+
+## Tracking Magic the Gathering cards posted by the mtg-cards-hourly Tumblr bot.
+
+```{r}
+library(tidyverse)
+library(stringr)
+
+logged_data <- read_csv("./data.csv")
+
+latest_data <- logged_data %>%
+ rename(
+   CardName = 'Card Name',
+   CardTypes = 'Card Types',
+   ManaCost = 'Mana Value'
+ )
+
+latest_data$ManaValue <- as.numeric(str_extract(latest_data$ManaCost, "\\d+")) +
+ str_count(latest_data$ManaCost, "W") +
+ str_count(latest_data$ManaCost, "U") +
+ str_count(latest_data$ManaCost, "R") +
+ str_count(latest_data$ManaCost, "B") +
+ str_count(latest_data$ManaCost, "G")
+
+latest_data_longer <- latest_data %>%
+separate_rows(CardTypes, sep = ", ")
+
+card_type_plot <- latest_data_longer %>%
+ ggplot() +
+ geom_bar(aes(x=CardTypes)) +
+ labs(
+   title="What are the most common card types?",
+   subtitle="Counting the instances of each card type posted by the mtg-cards-hourly Tumblr bot.",
+   x = "Card Type",
+   y = "Count"
+ ) 
+
+mana_counts <- tibble(
+ colour = c("W", "U", "R", "B", "G"),
+ count = 0
+)
+for(i in 1:5)  {
+ mana_counts$count[i] <- sum(str_count(latest_data$ManaCost, mana_counts$colour[i]) > 0)
+}
+colour_plot <- ggplot(mana_counts) +
+ geom_bar(aes(x=colour, y=count, fill=colour), stat = "identity") +
+ scale_fill_manual(values= c(
+   "W" = "gray",
+   "U" = "darkblue",
+   "B" = "black",
+   "R" = "darkred",
+   "G" = "darkgreen"
+ )) +
+ scale_x_discrete(labels = c(
+   "W" = "White",
+   "U" = "Blue",
+   "R" = "Red",
+   "B" = "Black",
+   "G" = "Green"
+ )) +
+ labs(
+   title= "What's the most common mana colour?",
+   subtitle = "Counting the instances of each colour identity in our dataset.",
+   x = "Colour",
+   y = "Count"
+ )
+
+mean_mana_value <- mean(latest_data$ManaValue)
+mode_colour <- mana_counts[which.max(mana_counts$count), ]
+
+```
+
+The mean mana value of this set of cards is `r sprintf("%.2f", mean_mana_value)`.
+
+The most common colour is `r mode_colour[1]`, with `r mode_colour[2]` cards.
+
+```{r, echo=FALSE}
+plot(colour_plot)
+plot(card_type_plot)
+```
