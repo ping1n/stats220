@@ -98,7 +98,7 @@ mode_colour <- mana_counts[which.max(mana_counts$count), ]
 
 The mean mana value of this set of cards is `r sprintf("%.2f", mean_mana_value)`.
 
-The most common colour is `r mode_colour[1]`, with `r mode_colour[2]` cards.
+The most common colour is `r mode_colour[[1]]`, with `r mode_colour[[2]]` cards.
 
 ```{r}
 plot(colour_plot)
