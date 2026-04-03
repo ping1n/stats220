@@ -18,7 +18,7 @@ body {
 ## Tracking Magic the Gathering cards posted by the mtg-cards-hourly Tumblr bot.
 
 ```{r}
-logged_data <- read_csv("./data.csv")
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2h5IlWqXmkODg_q3OI0asrvD2PctbvRIbgSYABFiUD_aaXPuH4V_l2sbAztNfz0R5tzh0IFq2AHKR/pub?output=csv")
 
 latest_data <- logged_data %>%
  rename(
