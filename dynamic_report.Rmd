@@ -101,7 +101,7 @@ The mean mana value of this set of cards is `r sprintf("%.2f", mean_mana_value)`
 
 The most common colour is `r mode_colour[1]`, with `r mode_colour[2]` cards.
 
-```{r, echo=FALSE}
+```{r}
 plot(colour_plot)
 plot(card_type_plot)
 ```
