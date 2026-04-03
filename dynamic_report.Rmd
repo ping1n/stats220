@@ -18,7 +18,6 @@ body {
 
 ```{r}
 library(tidyverse)
-library(stringr)
 
 logged_data <- read_csv("./data.csv")
 
@@ -29,6 +28,19 @@ latest_data <- logged_data %>%
    ManaCost = 'Mana Value'
  )
 
+# Last minute recreation of the str_count function from stringr
+str_count <- function(string_vector, pattern) {
+  counts <- numeric(length(string_vector))
+  matches <- gregexpr(pattern, string_vector)
+  for(i in 1:length(matches)) {
+    if(matches[[i]][1] != -1) {
+      counts[i] <- length(matches[[i]])
+    }
+  }
+  return(counts)
+}
+
+# Convert mana cost to mana value
 latest_data$ManaValue <- as.numeric(str_extract(latest_data$ManaCost, "\\d+")) +
  str_count(latest_data$ManaCost, "W") +
  str_count(latest_data$ManaCost, "U") +
@@ -36,8 +48,9 @@ latest_data$ManaValue <- as.numeric(str_extract(latest_data$ManaCost, "\\d+")) +
  str_count(latest_data$ManaCost, "B") +
  str_count(latest_data$ManaCost, "G")
 
+# Separate card types for counting
 latest_data_longer <- latest_data %>%
-separate_rows(CardTypes, sep = ", ")
+  separate_rows(CardTypes, sep = ", ")
 
 card_type_plot <- latest_data_longer %>%
  ggplot() +
