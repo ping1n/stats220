@@ -68,21 +68,15 @@ mana_counts <- tibble(
 for(i in 1:5)  {
  mana_counts$count[i] <- sum(str_count(latest_data$ManaCost, mana_counts$colour[i]) > 0)
 }
+mana_counts$colour <- c("White", "Blue", "Red", "Black", "Green")
 colour_plot <- ggplot(mana_counts) +
  geom_bar(aes(x=colour, y=count, fill=colour), stat = "identity") +
  scale_fill_manual(values= c(
-   "W" = "gray",
-   "U" = "darkblue",
-   "B" = "black",
-   "R" = "darkred",
-   "G" = "darkgreen"
- )) +
- scale_x_discrete(labels = c(
-   "W" = "White",
-   "U" = "Blue",
-   "R" = "Red",
-   "B" = "Black",
-   "G" = "Green"
+   "White" = "gray",
+   "Blue" = "darkblue",
+   "Black" = "black",
+   "Red" = "darkred",
+   "Green" = "darkgreen"
  )) +
  labs(
    title= "What's the most common mana colour?",
